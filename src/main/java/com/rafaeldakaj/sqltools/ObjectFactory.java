@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rafaeldakaj.sqltools.annotation.SQLColumn;
+import com.rafaeldakaj.sqltools.connection.SQLConnectionBase;
 
 @SuppressWarnings("unchecked")
 public class ObjectFactory {
 
     Class<?> type;
+    SQLConnectionBase sql;
 
-    public <V> ObjectFactory(Class<V> type){
+    public <V> ObjectFactory(Class<V> type, SQLConnectionBase sql){
         this.type = type;
+        this.sql = sql;
     }
 
     public <V> V createObject(ResultSet set){
@@ -47,6 +50,14 @@ public class ObjectFactory {
             e.printStackTrace();
         }
         return objects;
+    }
+
+    public <V> V createObject(SQLQuery query){
+        return createObject(sql.sendQuery(query));
+    }
+
+    public <V> List<V> createObjectList(SQLQuery query){
+        return createObjectList(sql.sendQuery(query));
     }
 
 }
