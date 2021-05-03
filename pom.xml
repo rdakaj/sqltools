@@ -6,7 +6,7 @@
 
   <groupId>com.rafaeldakaj</groupId>
   <artifactId>sqltools</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 
   <name>SQLTools</name>
   <description>A library used to convert SQL Data into Java Objects</description>
