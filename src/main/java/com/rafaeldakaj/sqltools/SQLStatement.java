@@ -10,13 +10,13 @@ import java.util.List;
 import com.rafaeldakaj.sqltools.annotation.SQLColumn;
 import com.rafaeldakaj.sqltools.annotation.SQLTable;
 
-
 public class SQLStatement {
 
     private String table;
     private SQLFields fields;
     private Object input;
     private boolean insertOnly;
+    private String rawStatement;
 
     public SQLStatement(String table, SQLField... fields){
         this.table = table;
@@ -27,6 +27,7 @@ public class SQLStatement {
     public SQLStatement(String table, Object input){
         this.table = table;
         this.fields = new SQLFields();
+        this.insertOnly = false;
         for(Field f : input.getClass().getFields()){
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             try {
@@ -40,6 +41,7 @@ public class SQLStatement {
     public SQLStatement(Object input){
         this.table = input.getClass().getAnnotation(SQLTable.class).value();
         this.fields = new SQLFields();
+        this.insertOnly = false;
         for(Field f : input.getClass().getFields()){
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             try {
@@ -48,6 +50,11 @@ public class SQLStatement {
                 e.printStackTrace();
             }
         }
+    }
+
+    public SQLStatement(String rawStatement){
+        this.rawStatement = rawStatement;
+        this.insertOnly = true;
     }
 
     private String getUpdateString(){
@@ -64,8 +71,8 @@ public class SQLStatement {
     
     public int send(Connection conn){
         Integer result = null;
+        String updateString = rawStatement != null ? getInsertString() : rawStatement;
         try {
-            String updateString = getInsertString();
             if(!insertOnly) updateString += " on duplicate key update " + getUpdateString();
             PreparedStatement update = conn.prepareStatement(updateString);
             for(int i = 0 ; i < fields.getFields().size() ; i++){

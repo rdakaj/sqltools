@@ -37,10 +37,12 @@
 	</licenses>
 
   <developers>
-    <name>Rafael Dakaj</name>
-    <email>rafaeldakaj@gmail.com</email>
-    <organization>com.rafaeldakaj</organization>
-    <organizationURL>https://github.com/rdakaj</organizationURL>
+    <developer>
+      <name>Rafael Dakaj</name>
+      <email>rafaeldakaj@gmail.com</email>
+      <organization>com.rafaeldakaj</organization>
+      <organizationUrl>https://github.com/rdakaj</organizationUrl>
+    </developer> 
   </developers>
 
   <build>
@@ -107,6 +109,35 @@
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
+           <executions>
+                <execution>
+                    <id>default-jar</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>javadoc-jar</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    <configuration>
+                        <classifier>javadoc</classifier>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>sources-jar</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    <configuration>
+                        <classifier>sources</classifier>
+                    </configuration>
+                </execution>
+            </executions>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
