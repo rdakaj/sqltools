@@ -1,4 +1,4 @@
-package com.rafaeldakaj.sqltools;
+package com.rafaeldakaj.sqltools.builder;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;

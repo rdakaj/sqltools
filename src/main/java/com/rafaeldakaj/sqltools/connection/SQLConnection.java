@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.rafaeldakaj.sqltools.SQLDatabase;
-import com.rafaeldakaj.sqltools.SQLQuery;
-import com.rafaeldakaj.sqltools.SQLStatement;
+import com.rafaeldakaj.sqltools.builder.SQLQuery;
+import com.rafaeldakaj.sqltools.builder.SQLStatement;
+import com.rafaeldakaj.sqltools.exception.NoMainConnectionException;
 import com.rafaeldakaj.sqltools.thread.SQLQueryTask;
 import com.rafaeldakaj.sqltools.thread.SQLStatementTask;
 
@@ -32,7 +32,8 @@ public class SQLConnection {
     }
 
     public static Connectable getMainConnection(){
-        return mainConnection;
+        if(mainConnection != null) return mainConnection;
+        else throw new NoMainConnectionException();
     }
 
     public Connection getConnection() {

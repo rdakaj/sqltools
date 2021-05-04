@@ -1,6 +1,10 @@
-package com.rafaeldakaj.sqltools;
+package com.rafaeldakaj.sqltools.connection;
+
+import com.rafaeldakaj.sqltools.exception.NoMainDatabaseException;
 
 public class SQLDatabase {
+
+    private static SQLDatabase mainDatabase;
 
     private String host;
     private String username;
@@ -10,6 +14,15 @@ public class SQLDatabase {
         this.host = host;
         this.username = username;
         this.password = password;
+    }
+
+    public static void setMainDatabase(SQLDatabase db){
+        mainDatabase = db;
+    }
+
+    public static SQLDatabase getMainDatabase(){
+        if(mainDatabase != null) return mainDatabase;
+        else throw new NoMainDatabaseException();
     }
 
     public String getHost() {

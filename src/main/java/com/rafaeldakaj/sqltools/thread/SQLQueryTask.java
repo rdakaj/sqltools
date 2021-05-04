@@ -3,7 +3,7 @@ package com.rafaeldakaj.sqltools.thread;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
-import com.rafaeldakaj.sqltools.SQLQuery;
+import com.rafaeldakaj.sqltools.builder.SQLQuery;
 
 public class SQLQueryTask implements Runnable{
 

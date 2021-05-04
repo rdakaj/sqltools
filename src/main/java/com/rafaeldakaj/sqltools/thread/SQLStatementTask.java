@@ -2,7 +2,7 @@ package com.rafaeldakaj.sqltools.thread;
 
 import java.sql.Connection;
 
-import com.rafaeldakaj.sqltools.SQLStatement;
+import com.rafaeldakaj.sqltools.builder.SQLStatement;
 
 public class SQLStatementTask implements Runnable{
 

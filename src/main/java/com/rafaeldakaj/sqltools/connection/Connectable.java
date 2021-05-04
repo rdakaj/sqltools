@@ -3,8 +3,8 @@ package com.rafaeldakaj.sqltools.connection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
-import com.rafaeldakaj.sqltools.SQLQuery;
-import com.rafaeldakaj.sqltools.SQLStatement;
+import com.rafaeldakaj.sqltools.builder.SQLQuery;
+import com.rafaeldakaj.sqltools.builder.SQLStatement;
 
 public interface Connectable {
 
