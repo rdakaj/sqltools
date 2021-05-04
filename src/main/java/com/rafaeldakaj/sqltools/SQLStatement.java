@@ -28,10 +28,15 @@ public class SQLStatement {
         this.table = table;
         this.fields = new SQLFields();
         this.insertOnly = false;
-        for(Field f : input.getClass().getFields()){
+        for(Field f : input.getClass().getDeclaredFields()){
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             try {
-                if(column != null) fields.add(new SQLField(column.value(), f.get(input)));
+                if(column != null) {
+                    boolean wasAccessible = f.isAccessible();
+                    if(!wasAccessible) f.setAccessible(true);
+                    fields.add(new SQLField(column.value(), f.get(input)));
+                    if(!wasAccessible) f.setAccessible(false);
+                }
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -42,10 +47,15 @@ public class SQLStatement {
         this.table = input.getClass().getAnnotation(SQLTable.class).value();
         this.fields = new SQLFields();
         this.insertOnly = false;
-        for(Field f : input.getClass().getFields()){
+        for(Field f : input.getClass().getDeclaredFields()){
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             try {
-                if(column != null) fields.add(new SQLField(column.value(), f.get(input)));
+                if(column != null) {
+                    boolean wasAccessible = f.isAccessible();
+                    if(!wasAccessible) f.setAccessible(true);
+                    fields.add(new SQLField(column.value(), f.get(input)));
+                    if(!wasAccessible) f.setAccessible(false);
+                }
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -93,10 +103,15 @@ public class SQLStatement {
     }
 
     public SQLStatement ignoreUniqueValue(){
-        for(Field f : input.getClass().getFields()){
+        for(Field f : input.getClass().getDeclaredFields()){
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             try {
-                if(column != null && column.unique()) fields.remove(fields.getFieldByColumn(column.value()));
+                if(column != null && column.unique()) {
+                    boolean wasAccessible = f.isAccessible();
+                    if(!wasAccessible) f.setAccessible(true);
+                    fields.remove(fields.getFieldByColumn(column.value()));
+                    if(!wasAccessible) f.setAccessible(false);
+                }
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import com.rafaeldakaj.sqltools.SQLQuery;
 import com.rafaeldakaj.sqltools.SQLStatement;
 
-public interface SQLConnectionBase {
+public interface Connectable {
 
     public Connection getConnection();
 

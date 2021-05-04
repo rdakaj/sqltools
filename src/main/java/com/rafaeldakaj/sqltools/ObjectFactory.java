@@ -6,17 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rafaeldakaj.sqltools.annotation.SQLColumn;
-import com.rafaeldakaj.sqltools.connection.SQLConnectionBase;
+import com.rafaeldakaj.sqltools.connection.SQLConnection;
 
 @SuppressWarnings("unchecked")
 public class ObjectFactory {
 
     Class<?> type;
-    SQLConnectionBase sql;
 
-    public <V> ObjectFactory(Class<V> type, SQLConnectionBase sql){
+    public <V> ObjectFactory(Class<V> type){
         this.type = type;
-        this.sql = sql;
     }
 
     public <V> V createObject(ResultSet set){
@@ -24,7 +22,7 @@ public class ObjectFactory {
         try {
             if(set.next()){
                 object = (V) type.getConstructor().newInstance();
-                for(Field field : type.getFields()) {
+                for(Field field : type.getDeclaredFields()) {
                     SQLColumn column = field.getAnnotation(SQLColumn.class);
                     if(column != null) field.set(object, set.getObject(column.value()));
                 }
@@ -40,9 +38,14 @@ public class ObjectFactory {
         try {
             while(set.next()){
                 V object = (V) type.getConstructor().newInstance();
-                for(Field field : type.getFields()) {
+                for(Field field : type.getDeclaredFields()) {
                     SQLColumn column = field.getAnnotation(SQLColumn.class);
-                    if(column != null) field.set(object, set.getObject(column.value()));
+                    if(column != null) {
+                        boolean wasAccessible = field.isAccessible();
+                        if(!wasAccessible) field.setAccessible(true);
+                        field.set(object, set.getObject(column.value()));
+                        if(!wasAccessible) field.setAccessible(false);
+                    }
                 }
                 objects.add(object);
             }
@@ -53,11 +56,11 @@ public class ObjectFactory {
     }
 
     public <V> V createObject(SQLQuery query){
-        return createObject(sql.sendQuery(query));
+        return createObject(SQLConnection.getMainConnection().sendQuery(query));
     }
 
     public <V> List<V> createObjectList(SQLQuery query){
-        return createObjectList(sql.sendQuery(query));
+        return createObjectList(SQLConnection.getMainConnection().sendQuery(query));
     }
 
 }

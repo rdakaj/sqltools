@@ -11,9 +11,12 @@ import com.rafaeldakaj.sqltools.SQLStatement;
 import com.rafaeldakaj.sqltools.thread.SQLQueryTask;
 import com.rafaeldakaj.sqltools.thread.SQLStatementTask;
 
-public class SQLConnection implements SQLConnectionBase{
+public class SQLConnection {
 
+    private static Connectable mainConnection;
+    
     private Connection conn;
+    
 
     public SQLConnection(SQLDatabase database, String schema){
         try{
@@ -24,12 +27,18 @@ public class SQLConnection implements SQLConnectionBase{
         }
     }
 
-    @Override
+    public static void setMainConnection(Connectable mainConnection){
+        SQLConnection.mainConnection = mainConnection;
+    }
+
+    public static Connectable getMainConnection(){
+        return mainConnection;
+    }
+
     public Connection getConnection() {
         return conn;
     }
 
-    @Override
     public void destroy() {
         try {
             conn.close();
@@ -38,7 +47,6 @@ public class SQLConnection implements SQLConnectionBase{
         }
     }
 
-    @Override
     public ResultSet sendQuery(SQLQuery query) {
         SQLQueryTask task = new SQLQueryTask(this.getConnection(), query);
         Thread thread = new Thread(task);
@@ -51,7 +59,6 @@ public class SQLConnection implements SQLConnectionBase{
         return task.getResult();
     }
 
-    @Override
     public int sendStatement(SQLStatement statement) {
         SQLStatementTask task = new SQLStatementTask(this.getConnection(), statement);
         Thread thread = new Thread(task);

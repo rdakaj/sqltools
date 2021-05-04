@@ -13,7 +13,7 @@ import com.rafaeldakaj.sqltools.SQLStatement;
 import com.rafaeldakaj.sqltools.thread.SQLQueryTask;
 import com.rafaeldakaj.sqltools.thread.SQLStatementTask;
 
-public class SQLPool implements SQLConnectionBase{
+public class SQLPool implements Connectable{
     
     private List<Connection> Pool = new ArrayList<>();
     private List<Connection> OutPool = new ArrayList<>();
@@ -29,6 +29,7 @@ public class SQLPool implements SQLConnectionBase{
         topOff();
     }
 
+    @Override
     public synchronized Connection getConnection(){
         if(Pool.isEmpty()) topOff();
         Connection conn = Pool.get(0);
@@ -56,6 +57,7 @@ public class SQLPool implements SQLConnectionBase{
         while(Pool.size() < size) spawn();
     }
 
+    @Override
     public void destroy(){
         for(Connection conn : OutPool) finish(conn);
         for(Connection conn : Pool) closeConnection(conn);
@@ -86,6 +88,7 @@ public class SQLPool implements SQLConnectionBase{
         } else return false;
     }
 
+    @Override
     public ResultSet sendQuery(SQLQuery query){
         SQLQueryTask task = new SQLQueryTask(this.getConnection(), query);
         Thread thread = new Thread(task);
@@ -98,6 +101,7 @@ public class SQLPool implements SQLConnectionBase{
         return task.getResult();
     }
 
+    @Override
     public int sendStatement(SQLStatement statement){
         SQLStatementTask task = new SQLStatementTask(this.getConnection(), statement);
         Thread thread = new Thread(task);
