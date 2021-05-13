@@ -12,6 +12,7 @@ public class SQLQuery {
 
     private String query;
     private ResultSet set;
+    private boolean logCommand = false;
     Class<?> type;
 
     public SQLQuery(String table){
@@ -49,10 +50,16 @@ public class SQLQuery {
     public ResultSet send(Connection conn){
         try {
             this.set = conn.createStatement().executeQuery(query);
+            if(logCommand) System.out.println("Sending SQL Query: " + query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return this.set;
+    }
+
+    public SQLQuery logCommand(){
+        this.logCommand = true;
+        return this;
     }
 
     public boolean next(){

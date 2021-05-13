@@ -17,6 +17,7 @@ public class SQLStatement {
     private Object input;
     private boolean insertOnly;
     private String rawStatement;
+    private boolean logCommand = false;
 
     public SQLStatement(String table, SQLField... fields){
         this.table = table;
@@ -90,6 +91,7 @@ public class SQLStatement {
                 update.setObject(i + 1, field.getValue());
                 if(!insertOnly) update.setObject(i + 1 + fields.size(), field.getValue());
             }
+            if(logCommand) System.out.println("Sending SQL Statement: " +  updateString);
             result = update.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,6 +101,11 @@ public class SQLStatement {
 
     public SQLStatement insertOnly(){
         this.insertOnly = true;
+        return this;
+    }
+
+    public SQLStatement logCommand(){
+        this.logCommand = true;
         return this;
     }
 

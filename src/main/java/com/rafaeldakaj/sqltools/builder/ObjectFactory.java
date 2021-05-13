@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.rafaeldakaj.sqltools.annotation.SQLColumn;
 import com.rafaeldakaj.sqltools.connection.Connectable;
-import com.rafaeldakaj.sqltools.connection.SQLConnection;
 
 @SuppressWarnings("unchecked")
 public class ObjectFactory {
@@ -56,16 +55,8 @@ public class ObjectFactory {
         return objects;
     }
 
-    public <V> V createObject(SQLQuery query){
-        return createObject(SQLConnection.getMainConnection().sendQuery(query));
-    }
-
     public <V> V createObject(SQLQuery query, Connectable sql){
         return createObject(sql.sendQuery(query));
-    }
-
-    public <V> List<V> createObjectList(SQLQuery query){
-        return createObjectList(SQLConnection.getMainConnection().sendQuery(query));
     }
 
     public <V> List<V> createObjectList(SQLQuery query, Connectable sql){

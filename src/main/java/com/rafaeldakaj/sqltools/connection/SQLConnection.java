@@ -7,13 +7,10 @@ import java.sql.SQLException;
 
 import com.rafaeldakaj.sqltools.builder.SQLQuery;
 import com.rafaeldakaj.sqltools.builder.SQLStatement;
-import com.rafaeldakaj.sqltools.exception.NoMainConnectionException;
 import com.rafaeldakaj.sqltools.thread.SQLQueryTask;
 import com.rafaeldakaj.sqltools.thread.SQLStatementTask;
 
 public class SQLConnection {
-
-    private static Connectable mainConnection;
     
     private Connection conn;
     
@@ -25,15 +22,6 @@ public class SQLConnection {
         } catch(SQLException e1){
             e1.printStackTrace();
         }
-    }
-
-    public static void setMainConnection(Connectable mainConnection){
-        SQLConnection.mainConnection = mainConnection;
-    }
-
-    public static Connectable getMainConnection(){
-        if(mainConnection != null) return mainConnection;
-        else throw new NoMainConnectionException();
     }
 
     public Connection getConnection() {
