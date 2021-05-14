@@ -71,10 +71,10 @@ public class SQLStatement {
         this.insertOnly = true;
     }
 
-    public static SQLStatement deleteStatement(Object object, String key){
-        String table = object.getClass().getAnnotation(SQLTable.class).value();
-        return new SQLStatement("delete * from " + table + " where " +
-        AnnotationReader.getSearchableValueFieldName(object) + "='" + key + "'");
+    public static SQLStatement deleteStatement(Class<?> type, String key){
+        String table = type.getAnnotation(SQLTable.class).value();
+        return new SQLStatement("delete from " + table + " where " +
+        AnnotationReader.getSearchableValueFieldName(type) + "='" + key + "'");
     }
 
     private String getUpdateString(){
@@ -95,7 +95,7 @@ public class SQLStatement {
         try {
             if(!insertOnly) updateString += " on duplicate key update " + getUpdateString();
             PreparedStatement update = conn.prepareStatement(updateString);
-            for(int i = 0 ; i < fields.getFields().size() ; i++){
+            if(rawStatement == null) for(int i = 0 ; i < fields.getFields().size() ; i++){
                 SQLField field = (SQLField) fields.get(i);
                 update.setObject(i + 1, field.getValue());
                 if(!insertOnly) update.setObject(i + 1 + fields.size(), field.getValue());
