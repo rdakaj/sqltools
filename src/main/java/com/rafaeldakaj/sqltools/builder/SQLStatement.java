@@ -82,13 +82,15 @@ public class SQLStatement {
     
     public int send(Connection conn){
         Integer result = null;
-        String updateString = rawStatement != null ? getInsertString() : rawStatement;
+        String updateString = rawStatement == null ? getInsertString() : rawStatement;
         try {
             if(!insertOnly) updateString += " on duplicate key update " + getUpdateString();
             PreparedStatement update = conn.prepareStatement(updateString);
+            System.out.println("Raw Statement: " + updateString);
             for(int i = 0 ; i < fields.getFields().size() ; i++){
                 SQLField field = (SQLField) fields.get(i);
                 update.setObject(i + 1, field.getValue());
+                if(logCommand) System.out.println("Field " + i + 1  + " (" + field.getColumn() + "): " + field.getValue().toString());
                 if(!insertOnly) update.setObject(i + 1 + fields.size(), field.getValue());
             }
             if(logCommand) System.out.println("Sending SQL Statement: " +  updateString);
