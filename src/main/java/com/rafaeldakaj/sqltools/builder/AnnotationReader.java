@@ -19,7 +19,26 @@ public class AnnotationReader {
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             if(column != null && column.unique()) return f.getName();
         }
-        throw new RuntimeException("No unique column inside the class " + object.getClass().getName());
+        return null;
     }
+
+    public static boolean hasSearchableValue(Object object) {
+        for(Field f : object.getClass().getDeclaredFields()){
+            SQLColumn column = f.getAnnotation(SQLColumn.class);
+            if(column != null && column.searchable()) return true;
+        }
+        return false;
+    }
+
+
+    public static String getSearchableValueFieldName(Object object) {
+        for(Field f : object.getClass().getDeclaredFields()){
+            SQLColumn column = f.getAnnotation(SQLColumn.class);
+            if(column != null && column.searchable()) return f.getName();
+        }
+        return null;
+    }
+
+
     
 }

@@ -71,6 +71,12 @@ public class SQLStatement {
         this.insertOnly = true;
     }
 
+    public static SQLStatement deleteStatement(Object object, String key){
+        String table = object.getClass().getAnnotation(SQLTable.class).value();
+        return new SQLStatement("delete * from " + table + " where " +
+        AnnotationReader.getSearchableValueFieldName(object) + "='" + key + "'");
+    }
+
     private String getUpdateString(){
         List<String> updateQuery = new ArrayList<>();
         for(SQLField field : fields.getFields()) updateQuery.add(field.getColumn() + "=?");
