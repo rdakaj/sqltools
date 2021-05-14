@@ -52,10 +52,13 @@ public class SQLStatement {
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             try {
                 if(column != null) {
-                    boolean wasAccessible = f.isAccessible();
-                    if(!wasAccessible) f.setAccessible(true);
-                    fields.add(new SQLField(column.value(), f.get(input)));
-                    if(!wasAccessible) f.setAccessible(false);
+                    Object obj = f.get(input);
+                    if(obj != null){
+                        boolean wasAccessible = f.isAccessible();
+                        if(!wasAccessible) f.setAccessible(true);
+                        fields.add(new SQLField(column.value(), obj));
+                        if(!wasAccessible) f.setAccessible(false);
+                    }
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
@@ -86,11 +89,9 @@ public class SQLStatement {
         try {
             if(!insertOnly) updateString += " on duplicate key update " + getUpdateString();
             PreparedStatement update = conn.prepareStatement(updateString);
-            System.out.println("Raw Statement: " + updateString);
             for(int i = 0 ; i < fields.getFields().size() ; i++){
                 SQLField field = (SQLField) fields.get(i);
                 update.setObject(i + 1, field.getValue());
-                if(logCommand) System.out.println("Field " + i + 1  + " (" + field.getColumn() + "): " + field.getValue().toString());
                 if(!insertOnly) update.setObject(i + 1 + fields.size(), field.getValue());
             }
             if(logCommand) System.out.println("Sending SQL Statement: " +  updateString);
