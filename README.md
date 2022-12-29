@@ -4,7 +4,7 @@ A MySQL API used to insert Java objects into MySQL Tables, and create connection
 
 https://mvnrepository.com/artifact/com.rafaeldakaj/sqltools
 
-##Maven Repo
+## Maven Repo
 
 `<!-- https://mvnrepository.com/artifact/com.rafaeldakaj/sqltools -->`<br> 
 `<dependency>`<br> 
