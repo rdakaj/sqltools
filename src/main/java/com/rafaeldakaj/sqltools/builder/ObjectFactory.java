@@ -25,6 +25,7 @@ public class ObjectFactory {
                 for(Field field : type.getDeclaredFields()) {
                     SQLColumn column = field.getAnnotation(SQLColumn.class);
                     if(column != null) field.set(object, set.getObject(column.value()));
+ 
                 }
             }
         } catch (Exception e) {

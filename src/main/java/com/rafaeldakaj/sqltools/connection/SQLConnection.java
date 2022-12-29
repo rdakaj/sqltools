@@ -10,16 +10,15 @@ import com.rafaeldakaj.sqltools.builder.SQLStatement;
 import com.rafaeldakaj.sqltools.thread.SQLQueryTask;
 import com.rafaeldakaj.sqltools.thread.SQLStatementTask;
 
-public class SQLConnection {
-    
-    private Connection conn;
-    
+public class SQLConnection implements Connectable {
 
-    public SQLConnection(SQLDatabase database, String schema){
-        try{
+    private Connection conn;
+
+    public SQLConnection(SQLDatabase database, String schema) {
+        try {
             this.conn = DriverManager.getConnection("jdbc:mysql://" + database.getHost() + ":3306/" + schema
-            + "?autoReconnect=true&useSSL=false", database.getUsername(), database.getPassword());
-        } catch(SQLException e1){
+                    + "?autoReconnect=true&useSSL=false", database.getUsername(), database.getPassword());
+        } catch (SQLException e1) {
             e1.printStackTrace();
         }
     }
@@ -57,7 +56,7 @@ public class SQLConnection {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return task.getResult();  
+        return task.getResult();
     }
-    
+
 }

@@ -15,54 +15,57 @@ public class SQLQuery {
     private boolean logCommand = false;
     Class<?> type;
 
-    public SQLQuery(String table){
+    public SQLQuery(String table) {
         this.query = "select * from " + table;
     }
 
-    public SQLQuery(String table, String column, Object value){
+    public SQLQuery(String table, String column, Object value) {
         String sValue = value instanceof String ? "'" + value + "'" : value.toString();
         this.query = "select * from " + table + " where " + column + "=" + sValue;
     }
 
-    public <V> SQLQuery(Class<V> classType, String column, Object value){
+    public <V> SQLQuery(Class<V> classType, String column, Object value) {
         SQLTable table = classType.getAnnotation(SQLTable.class);
         this.type = classType;
         String sValue = value instanceof String ? "'" + value + "'" : value.toString();
         this.query = "select * from " + table.value() + " where " + column + "=" + sValue;
     }
 
-    public <V> SQLQuery(Class<V> classType){
+    public <V> SQLQuery(Class<V> classType) {
         SQLTable table = classType.getAnnotation(SQLTable.class);
         this.type = classType;
-        if(table != null) this.query = "select * from " + table.value();        
+        if (table != null)
+            this.query = "select * from " + table.value();
     }
 
-    public <V> SQLQuery(Class<V> classType, Object value){
+    public <V> SQLQuery(Class<V> classType, Object value) {
         this.type = classType;
         SQLTable table = classType.getAnnotation(SQLTable.class);
-        for(Field f : classType.getFields()){
+        for (Field f : classType.getFields()) {
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             String sValue = value instanceof String ? "'" + value + "'" : value.toString();
-            if(column.searchable()) this.query = "select * from " + table.value() + " where " + column.value() + "=" + sValue; 
-        }     
+            if (column.searchable())
+                this.query = "select * from " + table.value() + " where " + column.value() + "=" + sValue;
+        }
     }
-    
-    public ResultSet send(Connection conn){
+
+    public ResultSet send(Connection conn) {
         try {
             this.set = conn.createStatement().executeQuery(query);
-            if(logCommand) System.out.println("Sending SQL Query: " + query);
+            if (logCommand)
+                System.out.println("Sending SQL Query: " + query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return this.set;
     }
 
-    public SQLQuery logCommand(){
+    public SQLQuery logCommand() {
         this.logCommand = true;
         return this;
     }
 
-    public boolean next(){
+    public boolean next() {
         try {
             return set.next();
         } catch (SQLException e) {
@@ -71,8 +74,13 @@ public class SQLQuery {
         return false;
     }
 
-    public ResultSet getResultSet(){
+    public ResultSet getResultSet() {
         return set;
+    }
+
+    @Override
+    public String toString() {
+        return query;
     }
 
 }
