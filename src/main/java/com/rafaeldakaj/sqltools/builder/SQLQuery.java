@@ -45,7 +45,8 @@ public class SQLQuery {
             SQLColumn column = f.getAnnotation(SQLColumn.class);
             String sValue = value instanceof String ? "'" + value + "'" : value.toString();
             if (column.searchable())
-                this.query = "select * from " + table.value() + " where " + column.value() + "=" + sValue;
+                this.query = "select * from " + table.value() + " where " + column.value() + "="
+                        + sValue;
         }
     }
 
@@ -82,5 +83,4 @@ public class SQLQuery {
     public String toString() {
         return query;
     }
-
 }

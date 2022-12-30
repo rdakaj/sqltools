@@ -5,7 +5,7 @@ public class SQLField {
     private String column;
     private Object value;
 
-    public SQLField(String column, Object value){
+    public SQLField(String column, Object value) {
         this.column = column;
         this.value = value;
     }
@@ -17,5 +17,5 @@ public class SQLField {
     public Object getValue() {
         return value;
     }
-        
+
 }
